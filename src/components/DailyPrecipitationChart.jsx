@@ -32,7 +32,7 @@ function DailyPrecipitationChart({ dailyData }) {
             width={48}
           />
           <Tooltip formatter={(value) => [`${value} mm`, 'Precip']} />
-          <Bar dataKey="precip" fill="#0000ff" />
+          <Bar dataKey="precip" fill="#1480c7" radius={[4, 4, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </div>

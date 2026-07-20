@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import API_CONFIG from '../config/apiConfig';
-import DailyPrecipitationChart from './DailyPrecipitationChart';
+import Modal from './Modal';
 
 const MAX_RETRIES = 3;
 
@@ -21,19 +21,31 @@ function parseError(error) {
   return error.message || 'An unexpected error occurred. Please try again.';
 }
 
-function DailyChartModal({ visible, onClose, modalData, markerPosition }) {
-  const [dailyData, setDailyData] = useState(null);
+/**
+ * Shared chart modal: fetches chart data for the marker position from the
+ * given endpoint and renders it via the children render prop.
+ */
+function ChartModal({
+  visible,
+  onClose,
+  title,
+  summary,
+  endpoint,
+  markerPosition,
+  children,
+}) {
+  const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
   const [isRetrying, setIsRetrying] = useState(false);
   const retryCount = useRef(0);
 
-  const fetchDailyData = async () => {
+  const fetchData = async () => {
     if (!markerPosition) return;
     setIsLoading(true);
     try {
       const response = await axios.post(
-        `${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.DAILY_PRECIPITATION}`,
+        `${API_CONFIG.BASE_URL}${endpoint}`,
         {
           lat: markerPosition.latitude,
           lon: markerPosition.longitude,
@@ -43,10 +55,10 @@ function DailyChartModal({ visible, onClose, modalData, markerPosition }) {
       if (!response.data || Object.keys(response.data).length === 0) {
         throw new Error('No data received from API');
       }
-      setDailyData(response.data);
+      setData(response.data);
       setErrorMessage(null);
     } catch (error) {
-      console.error('Error fetching daily data:', error);
+      console.error(`Error fetching ${endpoint} data:`, error);
       setErrorMessage(parseError(error));
     } finally {
       setIsLoading(false);
@@ -58,7 +70,7 @@ function DailyChartModal({ visible, onClose, modalData, markerPosition }) {
     if (visible) {
       setErrorMessage(null);
       retryCount.current = 0;
-      fetchDailyData();
+      fetchData();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [markerPosition, visible]);
@@ -70,53 +82,44 @@ function DailyChartModal({ visible, onClose, modalData, markerPosition }) {
     }
     retryCount.current += 1;
     setIsRetrying(true);
-    fetchDailyData();
+    fetchData();
   };
 
-  if (!visible) return null;
-
   return (
-    <div className="modal-backdrop" onClick={onClose}>
-      <div className="modal-sheet modal-sheet--wide" onClick={(e) => e.stopPropagation()}>
-        {isLoading ? (
-          <div className="spinner" />
-        ) : (
-          <>
-            <h3>Daily precipitation chart</h3>
-            {errorMessage ? (
-              <div className="error-box">
-                <p>{errorMessage}</p>
-                {retryCount.current < MAX_RETRIES && (
-                  <button
-                    type="button"
-                    className="btn-retry"
-                    onClick={handleRetry}
-                    disabled={isRetrying}
-                  >
-                    {isRetrying
-                      ? 'Retrying…'
-                      : `Retry (${MAX_RETRIES - retryCount.current} attempts left)`}
-                  </button>
-                )}
-              </div>
-            ) : (
-              <>
-                {modalData && <p>{modalData.weekly_precipitation}</p>}
-                {dailyData ? (
-                  <DailyPrecipitationChart dailyData={dailyData} />
-                ) : (
-                  <p>No data</p>
-                )}
-              </>
-            )}
-            <button type="button" className="btn-close" onClick={onClose}>
-              Close
-            </button>
-          </>
-        )}
-      </div>
-    </div>
+    <Modal visible={visible} onClose={onClose} title={title} wide>
+      {isLoading ? (
+        <div className="spinner" />
+      ) : (
+        <>
+          {errorMessage ? (
+            <div className="error-box">
+              <p>{errorMessage}</p>
+              {retryCount.current < MAX_RETRIES && (
+                <button
+                  type="button"
+                  className="btn-retry"
+                  onClick={handleRetry}
+                  disabled={isRetrying}
+                >
+                  {isRetrying
+                    ? 'Retrying…'
+                    : `Retry (${MAX_RETRIES - retryCount.current} attempts left)`}
+                </button>
+              )}
+            </div>
+          ) : (
+            <>
+              {summary && <p>{summary}</p>}
+              {data ? children(data) : <p>No data</p>}
+            </>
+          )}
+          <button type="button" className="btn-close" onClick={onClose}>
+            Close
+          </button>
+        </>
+      )}
+    </Modal>
   );
 }
 
-export default DailyChartModal;
+export default ChartModal;

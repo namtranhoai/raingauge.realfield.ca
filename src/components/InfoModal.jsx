@@ -1,15 +1,12 @@
 import { APP_VERSION } from '../config/version';
+import Modal from './Modal';
 
 const CAPA_PDF =
   'https://collaboration.cmc.ec.gc.ca/cmc/cmoi/product_guide/docs/lib/capa_information_leaflet_20141118_en.pdf';
 
 function InfoModal({ visible, onClose }) {
-  if (!visible) return null;
-
   return (
-    <div className="modal-backdrop" onClick={onClose}>
-      <div className="modal-sheet modal-sheet--scroll" onClick={(e) => e.stopPropagation()}>
-        <h3>Virtual Rain Gauge</h3>
+    <Modal visible={visible} onClose={onClose} title="Virtual Rain Gauge" scroll>
         <p>Precipitation amounts may be delayed by one day</p>
         <p>
           Select a map layer to display. Zoom to areas and click to get exact
@@ -51,11 +48,10 @@ function InfoModal({ visible, onClose }) {
 
         <p className="version-line">Version: {APP_VERSION}</p>
 
-        <button type="button" className="btn-close" onClick={onClose}>
-          Close
-        </button>
-      </div>
-    </div>
+      <button type="button" className="btn-close" onClick={onClose}>
+        Close
+      </button>
+    </Modal>
   );
 }
 

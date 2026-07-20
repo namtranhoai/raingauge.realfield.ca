@@ -9,20 +9,28 @@ import {
   Legend,
 } from 'recharts';
 
-function SeasonComparisonChart({ seasonData }) {
-  if (!seasonData) return null;
+/**
+ * Compares precipitation sums across years (used for both the growing
+ * season and the crop year). Expects {data: [{year, precip_sum}]}.
+ */
+function YearlyComparisonChart({ seasonData, seriesName = 'Season' }) {
+  const rows = Array.isArray(seasonData)
+    ? seasonData
+    : Array.isArray(seasonData?.data)
+      ? seasonData.data
+      : [];
+  if (rows.length === 0) return null;
 
-  const years = Object.keys(seasonData);
-  const values = years.map((key) => seasonData[key].precip_sum);
+  const values = rows.map((row) => row.precip_sum);
   const dataWithoutLast = values.slice(0, -1);
   const average =
     dataWithoutLast.length > 0
       ? dataWithoutLast.reduce((sum, v) => sum + v, 0) / dataWithoutLast.length
       : 0;
 
-  const chartData = years.map((key) => ({
-    year: String(seasonData[key].year),
-    precip: seasonData[key].precip_sum,
+  const chartData = rows.map((row) => ({
+    year: String(row.year),
+    precip: row.precip_sum,
     average,
   }));
 
@@ -38,17 +46,19 @@ function SeasonComparisonChart({ seasonData }) {
           <Line
             type="monotone"
             dataKey="precip"
-            name="Season"
-            stroke="#0000ff"
-            strokeWidth={2}
-            dot={{ r: 5 }}
+            name={seriesName}
+            stroke="#1480c7"
+            strokeWidth={2.5}
+            dot={{ r: 4, fill: '#1480c7', strokeWidth: 0 }}
+            activeDot={{ r: 6 }}
           />
           <Line
             type="monotone"
             dataKey="average"
             name="Historical avg"
-            stroke="#ff0000"
+            stroke="#e8590c"
             strokeWidth={2}
+            strokeDasharray="6 4"
             dot={false}
           />
         </LineChart>
@@ -57,4 +67,4 @@ function SeasonComparisonChart({ seasonData }) {
   );
 }
 
-export default SeasonComparisonChart;
+export default YearlyComparisonChart;

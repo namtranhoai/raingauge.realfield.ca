@@ -4,21 +4,24 @@ import ValuesModal from '../components/ValuesModal';
 import InfoModal from '../components/InfoModal';
 import Legend from '../components/Legend';
 import ButtonBar from '../components/ButtonBar';
-import DailyChartModal from '../components/DailyChartModal';
-import SeasonChartModal from '../components/SeasonChartModal';
+import ChartModal from '../components/ChartModal';
+import DailyPrecipitationChart from '../components/DailyPrecipitationChart';
+import YearlyComparisonChart from '../components/YearlyComparisonChart';
+import API_CONFIG from '../config/apiConfig';
 import { fetchPrecipitationValues } from '../utils/mapPress';
 
 function HomePage() {
   const [selectedLayer, setSelectedLayer] = useState('weeklyRain');
   const [infoModalVisible, setInfoModalVisible] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
-  const [modalDailyChartVisible, setModalDailyChartVisible] = useState(false);
-  const [modalSeasonChartVisible, setModalSeasonChartVisible] = useState(false);
+  const [activeChart, setActiveChart] = useState(null); // 'daily' | 'season' | 'year'
   const [modalData, setModalData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [markerPosition, setMarkerPosition] = useState(null);
+  const [hasInteracted, setHasInteracted] = useState(false);
 
   const handleMapPress = async (latlng) => {
+    setHasInteracted(true);
     setMarkerPosition(latlng);
     setModalData(null);
     setLoading(true);
@@ -26,6 +29,16 @@ function HomePage() {
     const data = await fetchPrecipitationValues(latlng);
     setModalData(data);
     setLoading(false);
+  };
+
+  const openChart = (chart) => {
+    setModalVisible(false);
+    setActiveChart(chart);
+  };
+
+  const closeChart = () => {
+    setActiveChart(null);
+    setModalVisible(true);
   };
 
   return (
@@ -37,6 +50,11 @@ function HomePage() {
           markerPosition={markerPosition}
         />
         <Legend selectedLayer={selectedLayer} />
+        {!hasInteracted && (
+          <div className="map-hint" role="status">
+            👆 Tap anywhere on the map to get precipitation
+          </div>
+        )}
       </div>
 
       <ValuesModal
@@ -44,35 +62,47 @@ function HomePage() {
         loading={loading}
         modalData={modalData}
         onClose={() => setModalVisible(false)}
-        onDailyChartOpen={() => {
-          setModalVisible(false);
-          setModalDailyChartVisible(true);
-        }}
-        onSeasonChartOpen={() => {
-          setModalVisible(false);
-          setModalSeasonChartVisible(true);
-        }}
+        onDailyChartOpen={() => openChart('daily')}
+        onSeasonChartOpen={() => openChart('season')}
+        onYearChartOpen={() => openChart('year')}
       />
 
-      <DailyChartModal
-        visible={modalDailyChartVisible}
-        onClose={() => {
-          setModalVisible(true);
-          setModalDailyChartVisible(false);
-        }}
-        modalData={modalData}
+      <ChartModal
+        visible={activeChart === 'daily'}
+        onClose={closeChart}
+        title="Daily precipitation chart"
+        summary={modalData?.weekly_precipitation}
+        endpoint={API_CONFIG.ENDPOINTS.DAILY_PRECIPITATION}
         markerPosition={markerPosition}
-      />
+      >
+        {(data) => <DailyPrecipitationChart dailyData={data} />}
+      </ChartModal>
 
-      <SeasonChartModal
-        visible={modalSeasonChartVisible}
-        onClose={() => {
-          setModalVisible(true);
-          setModalSeasonChartVisible(false);
-        }}
-        modalData={modalData}
+      <ChartModal
+        visible={activeChart === 'season'}
+        onClose={closeChart}
+        title="Season comparison chart"
+        summary={modalData?.seasonal_precipitation}
+        endpoint={API_CONFIG.ENDPOINTS.SEASON_COMPARISON}
         markerPosition={markerPosition}
-      />
+      >
+        {(data) => (
+          <YearlyComparisonChart seasonData={data} seriesName="Season" />
+        )}
+      </ChartModal>
+
+      <ChartModal
+        visible={activeChart === 'year'}
+        onClose={closeChart}
+        title="Crop year comparison chart"
+        summary={modalData?.yearly_precipitation}
+        endpoint={API_CONFIG.ENDPOINTS.YEAR_COMPARISON}
+        markerPosition={markerPosition}
+      >
+        {(data) => (
+          <YearlyComparisonChart seasonData={data} seriesName="Crop year" />
+        )}
+      </ChartModal>
 
       <InfoModal
         visible={infoModalVisible}
@@ -80,6 +110,7 @@ function HomePage() {
       />
 
       <ButtonBar
+        selectedLayer={selectedLayer}
         onInfoPress={() => setInfoModalVisible(true)}
         onLayerChange={setSelectedLayer}
       />
