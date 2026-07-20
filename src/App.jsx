@@ -1,5 +1,6 @@
 import HomePage from './pages/HomePage';
 import UpdateBanner from './components/UpdateBanner';
+import InstallPrompt from './components/InstallPrompt';
 import API_CONFIG from './config/apiConfig';
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
         <h1>Virtual Rain Gauge</h1>
       </header>
       <HomePage />
+      <InstallPrompt />
     </>
   );
 }

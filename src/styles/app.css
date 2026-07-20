@@ -544,6 +544,89 @@ button:focus-visible {
   color: var(--ink-soft);
 }
 
+.install-banner {
+  position: fixed;
+  left: 50%;
+  bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+  transform: translateX(-50%);
+  z-index: 1500;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  width: min(420px, calc(100% - 24px));
+  padding: 0.7rem 0.9rem;
+  background: var(--surface);
+  border: 1px solid #dbe4ec;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  animation: banner-up 0.3s ease both;
+}
+
+@keyframes banner-up {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.install-banner-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.install-banner-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 0;
+  font-size: 0.85rem;
+  line-height: 1.3;
+}
+
+.install-banner-text strong {
+  font-size: 0.9rem;
+}
+
+.install-banner-text span {
+  color: var(--ink-soft);
+}
+
+.install-banner-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.btn-install {
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 0.45rem 0.9rem;
+  background: var(--brand);
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.btn-install:hover {
+  background: var(--brand-dark);
+}
+
+.install-banner .btn-text {
+  border: none;
+  background: transparent;
+  color: var(--ink-soft);
+  font-weight: 600;
+  padding: 0.45rem 0.5rem;
+  cursor: pointer;
+}
+
 /* Leaflet above overlays but under modals */
 .leaflet-container {
   font: inherit;
@@ -552,7 +635,8 @@ button:focus-visible {
 @media (prefers-reduced-motion: reduce) {
   .modal-backdrop,
   .modal-sheet,
-  .map-hint {
+  .map-hint,
+  .install-banner {
     animation: none;
   }
 
