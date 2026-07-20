@@ -11,3 +11,4 @@ README.md
 *.md
 .env
 .env.*
+.claude

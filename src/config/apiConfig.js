@@ -1,5 +1,6 @@
 const API_CONFIG = {
-  BASE_URL: 'https://api.realfield.ca',
+  // BASE_URL: 'https://api.realfield.ca',
+  BASE_URL: 'https://api-2vudqtm7bq-uc.a.run.app',
   // BASE_URL: 'http://localhost:8000',
   ENDPOINTS: {
     PRECIPITATION_VALUES: '/precipitation_values',
