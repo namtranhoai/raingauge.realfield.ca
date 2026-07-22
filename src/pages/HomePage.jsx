@@ -12,6 +12,9 @@ import { fetchPrecipitationValues } from '../utils/mapPress';
 
 function HomePage() {
   const [selectedLayer, setSelectedLayer] = useState('weeklyRain');
+  const [overlayOpacity, setOverlayOpacity] = useState(0.8);
+  const [showRoads, setShowRoads] = useState(true);
+  const [showLabels, setShowLabels] = useState(true);
   const [infoModalVisible, setInfoModalVisible] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [activeChart, setActiveChart] = useState(null); // 'daily' | 'season' | 'year'
@@ -46,6 +49,9 @@ function HomePage() {
       <div className="map-area">
         <MapView
           selectedLayer={selectedLayer}
+          overlayOpacity={overlayOpacity}
+          showRoads={showRoads}
+          showLabels={showLabels}
           onMapPress={handleMapPress}
           markerPosition={markerPosition}
         />
@@ -111,6 +117,12 @@ function HomePage() {
 
       <ButtonBar
         selectedLayer={selectedLayer}
+        overlayOpacity={overlayOpacity}
+        onOverlayOpacityChange={setOverlayOpacity}
+        showRoads={showRoads}
+        showLabels={showLabels}
+        onShowRoadsChange={setShowRoads}
+        onShowLabelsChange={setShowLabels}
         onInfoPress={() => setInfoModalVisible(true)}
         onLayerChange={setSelectedLayer}
       />

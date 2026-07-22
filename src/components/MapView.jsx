@@ -19,6 +19,13 @@ const LAYER_URLS = {
   yearRain: 'https://storage.googleapis.com/rain_gauge_map_data/yearRain/{z}/{x}/{y}',
 };
 
+const REFERENCE_LAYERS = {
+  roads:
+    'https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Transportation/MapServer/tile/{z}/{y}/{x}',
+  labels:
+    'https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',
+};
+
 function MapClickHandler({ onMapPress }) {
   useMapEvents({
     click(e) {
@@ -40,7 +47,14 @@ function InvalidateSize() {
   return null;
 }
 
-function MapView({ selectedLayer, onMapPress, markerPosition }) {
+function MapView({
+  selectedLayer,
+  overlayOpacity = 0.8,
+  showRoads = true,
+  showLabels = true,
+  onMapPress,
+  markerPosition,
+}) {
   const overlayUrl = LAYER_URLS[selectedLayer];
 
   return (
@@ -60,9 +74,15 @@ function MapView({ selectedLayer, onMapPress, markerPosition }) {
         <TileLayer
           key={selectedLayer}
           url={overlayUrl}
-          opacity={0.8}
+          opacity={overlayOpacity}
           maxZoom={15}
         />
+      )}
+      {showRoads && (
+        <TileLayer url={REFERENCE_LAYERS.roads} maxZoom={15} />
+      )}
+      {showLabels && (
+        <TileLayer url={REFERENCE_LAYERS.labels} maxZoom={15} />
       )}
       <MapClickHandler onMapPress={onMapPress} />
       {markerPosition && (

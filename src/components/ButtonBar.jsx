@@ -8,7 +8,17 @@ const LAYERS = [
   { value: 'yearRain', label: 'Crop Year' },
 ];
 
-function ButtonBar({ selectedLayer, onInfoPress, onLayerChange }) {
+function ButtonBar({
+  selectedLayer,
+  overlayOpacity,
+  onOverlayOpacityChange,
+  showRoads,
+  showLabels,
+  onShowRoadsChange,
+  onShowLabelsChange,
+  onInfoPress,
+  onLayerChange,
+}) {
   const [layerModalVisible, setLayerModalVisible] = useState(false);
 
   const current = LAYERS.find((l) => l.value === selectedLayer);
@@ -55,6 +65,45 @@ function ButtonBar({ selectedLayer, onInfoPress, onLayerChange }) {
             </button>
           );
         })}
+        <div className="map-layer-toggles">
+          <label className="map-layer-toggle">
+            <input
+              type="checkbox"
+              checked={showRoads}
+              onChange={(e) => onShowRoadsChange(e.target.checked)}
+            />
+            <span>Show roads</span>
+          </label>
+          <label className="map-layer-toggle">
+            <input
+              type="checkbox"
+              checked={showLabels}
+              onChange={(e) => onShowLabelsChange(e.target.checked)}
+            />
+            <span>Show place names</span>
+          </label>
+        </div>
+        <label className="opacity-control" htmlFor="overlay-opacity">
+          <span className="opacity-control__label">Overlay transparency</span>
+          <div className="opacity-control__row">
+            <input
+              id="overlay-opacity"
+              type="range"
+              min={0}
+              max={100}
+              value={Math.round(overlayOpacity * 100)}
+              onChange={(e) =>
+                onOverlayOpacityChange(Number(e.target.value) / 100)
+              }
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-valuenow={Math.round(overlayOpacity * 100)}
+            />
+            <span className="opacity-control__value">
+              {Math.round(overlayOpacity * 100)}%
+            </span>
+          </div>
+        </label>
         <button
           type="button"
           className="btn-close"

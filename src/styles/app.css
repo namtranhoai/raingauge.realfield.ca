@@ -469,6 +469,70 @@ button:focus-visible {
   font-size: 1rem;
 }
 
+.map-layer-toggles {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding: 0.75rem;
+  border-radius: var(--radius-lg);
+  background: var(--surface-alt);
+}
+
+.map-layer-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.map-layer-toggle input[type='checkbox'] {
+  width: 1.1rem;
+  height: 1.1rem;
+  cursor: pointer;
+  accent-color: var(--brand);
+}
+
+.opacity-control {
+  display: block;
+  margin: 1rem 0 0.25rem;
+  padding: 0.75rem;
+  border-radius: var(--radius-lg);
+  background: var(--surface-alt);
+}
+
+.opacity-control__label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.opacity-control__row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.opacity-control input[type='range'] {
+  flex: 1;
+  height: 0.5rem;
+  cursor: pointer;
+  accent-color: var(--brand);
+}
+
+.opacity-control__value {
+  min-width: 2.5rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--ink);
+  text-align: right;
+}
+
 .btn-close {
   margin-top: 0.75rem;
   background: var(--surface-alt);
