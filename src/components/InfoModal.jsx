@@ -30,21 +30,33 @@ function InfoModal({ visible, onClose }) {
           College of Agriculture and Bioresources, University of Saskatchewan.
         </p>
 
-        <img
-          className="info-logo"
-          src="https://storage.googleapis.com/rain_gauge_map_data/images/agbio.png"
-          alt="AgBio"
-        />
-        <img
-          className="info-logo"
-          src="https://storage.googleapis.com/rain_gauge_map_data/images/aci.png"
-          alt="ACI"
-        />
-        <img
-          className="info-logo"
-          src="https://storage.googleapis.com/rain_gauge_map_data/images/realfield.png"
-          alt="RealField"
-        />
+        <div className="info-logos">
+          <img
+            className="info-logo"
+            src="https://storage.googleapis.com/rain_gauge_map_data/images/agbio.png"
+            alt="College of Agriculture and Bioresources"
+          />
+          <img
+            className="info-logo"
+            src="https://storage.googleapis.com/rain_gauge_map_data/images/aci.png"
+            alt="Agronomic Crop Imaging Lab"
+          />
+          <img
+            className="info-logo"
+            src="https://storage.googleapis.com/rain_gauge_map_data/images/ndac.png"
+            alt="Nutrien Digital Agriculture Centre"
+          />
+          <img
+            className="info-logo"
+            src="https://storage.googleapis.com/rain_gauge_map_data/images/acreage.png"
+            alt="ACREAGE Digital Agriculture — Agroecosystem Digital Twins and Intelligent Systems"
+          />
+          <img
+            className="info-logo"
+            src="https://storage.googleapis.com/rain_gauge_map_data/images/realfield.png"
+            alt="RealField"
+          />
+        </div>
 
         <p className="version-line">Version: {APP_VERSION}</p>
 

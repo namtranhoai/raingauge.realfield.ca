@@ -610,12 +610,19 @@ button:focus-visible {
   margin-top: 0.75rem;
 }
 
+.info-logos {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  margin: 0.75rem 0;
+}
+
 .info-logo {
-  display: block;
-  width: 200px;
-  height: 80px;
+  width: 120px;
+  height: 56px;
   object-fit: contain;
-  margin: 0.5rem auto;
 }
 
 .version-line {
