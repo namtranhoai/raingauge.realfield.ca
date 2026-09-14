@@ -4,6 +4,7 @@ import ValuesModal from '../components/ValuesModal';
 import InfoModal from '../components/InfoModal';
 import Legend from '../components/Legend';
 import ButtonBar from '../components/ButtonBar';
+import LogoCarousel from '../components/LogoCarousel';
 import ChartModal from '../components/ChartModal';
 import DailyPrecipitationChart from '../components/DailyPrecipitationChart';
 import YearlyComparisonChart from '../components/YearlyComparisonChart';
@@ -128,10 +129,7 @@ function HomePage() {
       />
 
       <div className="footer-logo">
-        <img
-          src="https://storage.googleapis.com/rain_gauge_map_data/images/agbio.png"
-          alt="College of Agriculture and Bioresources"
-        />
+        <LogoCarousel />
       </div>
     </div>
   );
